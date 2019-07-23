@@ -39,7 +39,7 @@ d3.json("data/buildings.json").then(data => {
   
   let y = d3.scaleLinear()
     .domain([0, d3.max(data, (building) => { return building.height })])
-    .range([0, canvasHeight])
+    .range([canvasHeight, 0])
     
   let x = d3.scaleBand()
     .domain(data.map((building) => { return building.name }))
@@ -74,12 +74,14 @@ d3.json("data/buildings.json").then(data => {
     .append("rect")
       .attr("width", x.bandwidth())
       .attr("height", (building) => {
-        return y(building.height)
+        return canvasHeight- y(building.height)
       })
       .attr("x", (building, index) => {
         return x(building.name);
       })
-      .attr("y", 0)
+      .attr("y", (building) => {
+        return y(building.height)
+      })
       .attr("fill", "grey")
   
 }).catch(error => {
