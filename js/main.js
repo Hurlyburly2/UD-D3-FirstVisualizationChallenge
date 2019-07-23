@@ -7,20 +7,16 @@ let svg = d3.select("#chart-area").append("svg")
 
 d3.json("data/buildings.json").then(data => {
   
-  let tallestBuilding = 0
   data.forEach(building => {
     building.height = parseInt(building.height)
-    if (building.height > tallestBuilding) {
-      tallestBuilding = building.height
-    }
   })
   
   let y = d3.scaleLinear()
-    .domain([0, tallestBuilding])
+    .domain([0, d3.max(data, (building) => { return building.height })])
     .range([0, canvasHeight])
     
   let x = d3.scaleBand()
-    .domain(["Burj Khalifa", "Shanghai Tower", "Abraj Al-Bait Clock Tower", "Ping An Finance Centre", "Lotte World Tower", "One World Trade Center", "Guangzhou CTF Finance Center"])
+    .domain(data.map((building) => { return building.name }))
     .range([0, 400])
     .paddingInner(0.4)
     .paddingOuter(0.2)
