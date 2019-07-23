@@ -1,12 +1,23 @@
+let canvasWidth = 400
+let canvasHeight = 400
+
+let svg = d3.select("#chart-area").append("svg")
+  .attr("width", canvasWidth)
+  .attr("height", canvasHeight)
+
 d3.json("data/buildings.json").then(data => {
   
+  let tallestBuilding = 0
   data.forEach(building => {
     building.height = parseInt(building.height)
+    if (building.height > tallestBuilding) {
+      tallestBuilding = building.height
+    }
   })
   
-  let svg = d3.select("#chart-area").append("svg")
-    .attr("width", 500)
-    .attr("height", 500)
+  let y = d3.scaleLinear()
+    .domain([0, tallestBuilding])
+    .range([0, canvasHeight])
   
   let rectangles = svg.selectAll("rect")
     .data(data)
@@ -15,7 +26,7 @@ d3.json("data/buildings.json").then(data => {
     .append("rect")
       .attr("width", 40)
       .attr("height", (building) => {
-        return building.height
+        return y(building.height)
       })
       .attr("x", (building, index) => {
         return index * 50;
