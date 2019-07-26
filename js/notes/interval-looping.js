@@ -56,3 +56,22 @@ text.enter().append("text")       //use the enter selector to set attributes for
   .attr("y", 20)
   .attr("fill", "green")
   .text(() => { return d; })
+  
+  
+  
+// TRANSITIONS   ****************************************************************************************
+// Attributes added BEFORE transition are applied right away
+// Attributes added AFTER transition are applied gradually
+
+rects.enter().append("rect")
+  .attr("height", ((data) => { return height - y(data.revenue )}))
+  .attr("x", ((data) => { return x(data.month) }))
+  .attr("width", x.bandwidth)
+  .attr("fill", "grey")
+  .attr("y", y(0))
+  .attr("fill-opacity", 0)
+  .transition(d3.transition().duration(500))          // Add transition to the objects when you create them (duration = length of transition)
+    .attr("y", ((data) => { return y(d[value]) }))    // Y at bottom of screen -> shape height
+    .attr("fill-opacity", 1)                          // opacity fades from 0->1 (invisible to solid)
+
+let transition = d3.transition().duration(500)        // you can define a transition as a variable!
